@@ -36,47 +36,47 @@ public class PlayTimeCommand extends AbstractPlayerCommand {
    }
 
    protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
-      String targetName = (String)context.get(this.usernameArg);
+      String targetUsername = (String)context.get(this.usernameArg);
       String startStr = (String)context.get(this.startDateArg);
       String endStr = (String)context.get(this.endDateArg);
-      long minTs = startStr != null ? this.parseDateToUnix(startStr) : 0L;
-      long maxTs = endStr != null ? this.parseDateToUnix(endStr) : Long.MAX_VALUE;
-      JsonObject jsonObj = (new FileExist()).checkPlayerFile(targetName);
-      if (jsonObj != null && jsonObj.has("eventList")) {
-         JsonArray eventList = jsonObj.getAsJsonArray("eventList");
-         long totalSeconds = this.calculateTime(eventList, minTs, maxTs);
-         playerRef.sendMessage(Message.raw(Lang.get("commands.playtime.result", targetName, this.formatDuration(totalSeconds))).bold(true).color(Color.GREEN));
+      long startTimestamp = startStr != null ? this.parseDateToUnix(startStr) : 0L;
+      long endTimestamp = endStr != null ? this.parseDateToUnix(endStr) : Long.MAX_VALUE;
+      JsonObject playerDataJson = (new PlayerFileManager()).checkPlayerFile(targetUsername);
+      if (playerDataJson != null && playerDataJson.has("eventList")) {
+         JsonArray playerEventList = playerDataJson.getAsJsonArray("eventList");
+         long totalPlaySeconds = this.calculateTime(playerEventList, startTimestamp, endTimestamp);
+         playerRef.sendMessage(Message.raw(Lang.get("commands.playtime.result", targetUsername, this.formatDuration(totalPlaySeconds))).bold(true).color(Color.GREEN));
       } else {
-         playerRef.sendMessage(Message.raw(Lang.get("commands.generic.player_not_found", targetName)).bold(true).color(Color.RED));
+         playerRef.sendMessage(Message.raw(Lang.get("commands.generic.player_not_found", targetUsername)).bold(true).color(Color.RED));
       }
    }
 
-   private long calculateTime(JsonArray eventList, long minTs, long maxTs) {
+   private long calculateTime(JsonArray playerEventList, long startTimestamp, long endTimestamp) {
       long total = 0L;
-      Long sessionStart = null;
+      Long currentSessionStart = null;
 
       long s;
-      for(int i = 0; i < eventList.size(); ++i) {
-         JsonObject ev = eventList.get(i).getAsJsonObject();
+      for(int i = 0; i < playerEventList.size(); ++i) {
+         JsonObject ev = playerEventList.get(i).getAsJsonObject();
          s = ev.get("timestamp").getAsLong();
-         boolean isConnect = ev.get("connect").getAsBoolean();
-         if (isConnect) {
-            sessionStart = s;
-         } else if (sessionStart != null) {
-            long s = Math.max(sessionStart, minTs);
-            long e = Math.min(s, maxTs);
+         boolean isConnectEvent = ev.get("connect").getAsBoolean();
+         if (isConnectEvent) {
+            currentSessionStart = s;
+         } else if (currentSessionStart != null) {
+            long s = Math.max(currentSessionStart, startTimestamp);
+            long e = Math.min(s, endTimestamp);
             if (e > s) {
                total += e - s;
             }
 
-            sessionStart = null;
+            currentSessionStart = null;
          }
       }
 
-      if (sessionStart != null) {
+      if (currentSessionStart != null) {
          long now = Instant.now().getEpochSecond();
-         s = Math.max(sessionStart, minTs);
-         long e = Math.min(now, maxTs);
+         s = Math.max(currentSessionStart, startTimestamp);
+         long e = Math.min(now, endTimestamp);
          if (e > s) {
             total += e - s;
          }

@@ -1,0 +1,15 @@
+{
+  "commands.generic.player_not_found": "У игрока {0} нет сохранённых данных.",
+  "commands.generic.no_events": "Для игрока {0} нет данных о событиях.",
+
+  "commands.seen.online": "{0} сейчас в сети!",
+  "commands.seen.offline": "Последнее подключение игрока {0}: {1}",
+
+  "commands.playtime.usage": "Использование: /playtime <ник> [начало] [конец]",
+  "commands.playtime.description": "Показывает время в игре игрока",
+  "commands.playtime.result": "Время в игре {0}: {1}",
+
+  "commands.arguments.start_date": "Дата начала (dd/MM/yyyy-HH:mm)",
+  "commands.arguments.end_date": "Дата окончания (dd/MM/yyyy-HH:mm)",
+  "commands.arguments.username": "Имя игрока"
+}

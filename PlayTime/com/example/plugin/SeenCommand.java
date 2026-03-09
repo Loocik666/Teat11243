@@ -28,27 +28,27 @@ public class SeenCommand extends AbstractPlayerCommand {
    }
 
    protected void execute(@Nonnull CommandContext commandContext, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
-      String targetName = (String)commandContext.get(this.username);
-      JsonObject jsonObj = (new FileExist()).checkPlayerFile(targetName);
-      if (jsonObj != null && jsonObj.has("eventList")) {
-         JsonArray eventList = jsonObj.getAsJsonArray("eventList");
-         if (eventList.size() == 0) {
-            playerRef.sendMessage(Message.raw(Lang.get("commands.generic.no_events", targetName)).bold(true).color(Color.RED));
+      String targetUsername = (String)commandContext.get(this.username);
+      JsonObject playerDataJson = (new PlayerFileManager()).checkPlayerFile(targetUsername);
+      if (playerDataJson != null && playerDataJson.has("eventList")) {
+         JsonArray playerEventList = playerDataJson.getAsJsonArray("eventList");
+         if (playerEventList.size() == 0) {
+            playerRef.sendMessage(Message.raw(Lang.get("commands.generic.no_events", targetUsername)).bold(true).color(Color.RED));
          } else {
-            JsonObject lastEvent = eventList.get(eventList.size() - 1).getAsJsonObject();
-            boolean isStillConnected = lastEvent.get("connect").getAsBoolean();
+            JsonObject latestEvent = playerEventList.get(playerEventList.size() - 1).getAsJsonObject();
+            boolean isStillConnected = latestEvent.get("connect").getAsBoolean();
             if (isStillConnected) {
-               playerRef.sendMessage(Message.raw(Lang.get("commands.seen.online", targetName)).bold(true).color(Color.GREEN));
+               playerRef.sendMessage(Message.raw(Lang.get("commands.seen.online", targetUsername)).bold(true).color(Color.GREEN));
             } else {
-               long timestamp = lastEvent.get("timestamp").getAsLong();
-               LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault());
-               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-               playerRef.sendMessage(Message.raw(Lang.get("commands.seen.offline", targetName, dateTime.format(formatter))).color(Color.GREEN));
+               long eventTimestamp = latestEvent.get("timestamp").getAsLong();
+               LocalDateTime eventDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(eventTimestamp), ZoneId.systemDefault());
+               DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+               playerRef.sendMessage(Message.raw(Lang.get("commands.seen.offline", targetUsername, eventDateTime.format(dateFormatter))).color(Color.GREEN));
             }
 
          }
       } else {
-         playerRef.sendMessage(Message.raw(Lang.get("commands.generic.player_not_found", targetName)).bold(true).color(Color.RED));
+         playerRef.sendMessage(Message.raw(Lang.get("commands.generic.player_not_found", targetUsername)).bold(true).color(Color.RED));
       }
    }
 }
