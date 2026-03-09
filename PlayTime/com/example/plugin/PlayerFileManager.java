@@ -12,12 +12,12 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileExist {
-   private static final String DIRECTORY_PATH = "plugins/seenPlugin/data/players";
+public class PlayerFileManager {
+   private static final String PLAYER_DATA_DIR = "plugins/seenPlugin/data/players";
 
    public JsonObject checkPlayerFile(String player) {
       String fileName = player + ".json";
-      Path filePath = Paths.get("plugins/seenPlugin/data/players", fileName);
+      Path filePath = Paths.get(PLAYER_DATA_DIR, fileName);
       if (!Files.exists(filePath, new LinkOption[0])) {
          JsonObject defaultJson = new JsonObject();
          defaultJson.add("eventList", new JsonArray());
@@ -43,7 +43,7 @@ public class FileExist {
 
    public void savePlayerFile(String player, JsonObject newData) {
       String fileName = player + ".json";
-      Path filePath = Paths.get("plugins/seenPlugin/data/players", fileName);
+      Path filePath = Paths.get(PLAYER_DATA_DIR, fileName);
       Gson gson = (new GsonBuilder()).setPrettyPrinting().serializeNulls().create();
 
       try {
