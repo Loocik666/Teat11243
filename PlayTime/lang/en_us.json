@@ -1,0 +1,15 @@
+{
+  "commands.generic.player_not_found": "Player {0} has no recorded data.",
+  "commands.generic.no_events": "No event data for {0}.",
+
+  "commands.seen.online": "{0} is currently online!",
+  "commands.seen.offline": "Last connection of {0}: {1}",
+
+  "commands.playtime.usage": "Usage: /playtime <username> [start] [end]",
+  "commands.playtime.description": "Displays a player's playtime",
+  "commands.playtime.result": "Playtime of {0}: {1}",
+
+  "commands.arguments.start_date": "Start date (dd/MM/yyyy-HH:mm)",
+  "commands.arguments.end_date": "End date (dd/MM/yyyy-HH:mm)",
+  "commands.arguments.username": "Player name"
+}
