@@ -1,0 +1,18 @@
+﻿{
+  "commands.generic.player_not_found": "Le joueur {0} n'a pas de donnees enregistrees.",
+  "commands.generic.no_events": "Aucune donnee d'evenement pour {0}.",
+
+  "commands.seen.description": "Affiche le statut de derniere connexion d'un joueur",
+  "commands.seen.online": "{0} est actuellement en ligne !",
+  "commands.seen.offline": "Derniere connexion de {0} : {1}",
+
+  "commands.playtime.usage": "Usage: /playtime <pseudo> [debut] [fin]",
+  "commands.playtime.description": "Affiche le temps de jeu d'un joueur",
+  "commands.playtime.result": "Temps de jeu de {0} : {1}",
+  "commands.playtime.invalid_date": "Date {0} invalide : {1}. Utilisez dd/MM/yyyy-HH:mm ou dd/MM/yyyy.",
+  "commands.playtime.invalid_range": "Intervalle invalide : la date de debut doit etre avant la date de fin.",
+
+  "commands.arguments.start_date": "Date de debut (dd/MM/yyyy-HH:mm)",
+  "commands.arguments.end_date": "Date de fin (dd/MM/yyyy-HH:mm)",
+  "commands.arguments.username": "Nom du joueur"
+}
